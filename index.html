@@ -98,6 +98,7 @@
             stroke-linejoin: round;
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
+            opacity: 0.8;
         }
 
         .branch.grow {
@@ -119,19 +120,19 @@
             position: absolute;
             transform: scale(0);
             animation: popHeart 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
         }
 
         @keyframes popHeart {
-            0% { transform: scale(0); opacity: 0;}
-            100% { transform: scale(1); opacity: 1;}
+            0% { transform: scale(0) rotate(-45deg); opacity: 0;}
+            100% { transform: scale(1) rotate(0deg); opacity: 1;}
         }
 
-        /* --- Mensaje y Animación de Texto --- */
         .message-box {
             text-align: center;
             margin-top: -10px;
             z-index: 3;
-            min-height: 100px;
+            min-height: 80px;
         }
 
         .love-quote {
@@ -156,9 +157,9 @@
         .signature {
             color: #ff4d6d; 
             font-weight: bold;
-            opacity: 0;
+            opacity: 0; 
             transition: opacity 1.5s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         /* CAJA DEL RELOJ */
@@ -173,6 +174,7 @@
             box-sizing: border-box;
             margin-top: 20px;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 3;
             opacity: 0;
             transition: opacity 1.5s ease;
         }
@@ -191,6 +193,13 @@
             width: 100%;
         }
 
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+
         .t-val {
             font-size: 1.5rem;
             font-weight: 800;
@@ -207,6 +216,7 @@
             position: fixed;
             top: -10vh;
             pointer-events: none;
+            z-index: 0;
             animation: rain linear forwards;
         }
         @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
@@ -221,6 +231,8 @@
     </div>
 
     <div id="main-card">
+        <div class="signature" id="sigAbel">—By Abel ❤️</div>
+        
         <div class="tree-container">
             <svg class="tree-svg" viewBox="0 0 200 300">
                 <path class="branch" stroke-width="12" d="M100,300 C100,250 80,200 100,150" />
@@ -235,11 +247,11 @@
 
         <div class="message-box">
             <div class="love-quote" id="quoteTarget"></div>
-            <div class="signature" id="signature">— I love you Alejandra❤️</div>
+            <div class="signature" id="sigAlejandra">— I love you Alejandra ❤️</div>
         </div>
 
         <div class="timer-box" id="timerBox">
-            <div class="timer-title">— Mi amor por ti comenzó hace... ❤️—> </div>
+            <div class="timer-title">— Mi amor por ti comenzó hace... ❤️ —</div>
             <div class="timer-row">
                 <div class="time-unit"><span class="t-val" id="d">0</span><br><span class="t-label">Días</span></div>
                 <div class="time-unit"><span class="t-val" id="h">0</span><br><span class="t-label">Hs</span></div>
@@ -252,7 +264,6 @@
     <script>
         const startDate = new Date('2026-01-01T00:00:00'); 
         
-        // Ya no necesitas los espacios dobles extra, el código ahora los respeta
         const messageLines = [
             "Contigo encontré mi lugar favorito en el mundo.",
             "Cada segundo a tu lado es un regalo."
@@ -263,8 +274,11 @@
         const mainCard = document.getElementById('main-card');
         const branches = document.querySelectorAll('.branch');
         const quoteTarget = document.getElementById('quoteTarget');
-        const signature = document.getElementById('signature');
         const timerBox = document.getElementById('timerBox');
+        
+        // Seleccionamos ambos elementos de firma
+        const sigAbel = document.getElementById('sigAbel');
+        const sigAlejandra = document.getElementById('sigAlejandra');
 
         trigger.addEventListener('click', () => {
             initContainer.style.opacity = '0';
@@ -300,8 +314,6 @@
                         const span = document.createElement('span');
                         span.className = 'letter-anim';
                         
-                        // --- AQUÍ ESTÁ LA SOLUCIÓN ---
-                        // Si la letra es un espacio, insertamos un código especial de espacio (&nbsp;)
                         if (char === ' ') {
                             span.innerHTML = '&nbsp;';
                         } else {
@@ -309,9 +321,8 @@
                         }
                         
                         quoteTarget.appendChild(span);
-                        
                         charIndex++;
-                        setTimeout(typeChar, 40); 
+                        setTimeout(typeChar, 45); 
                     } else {
                         quoteTarget.appendChild(document.createElement('br'));
                         lineIndex++;
@@ -319,7 +330,9 @@
                         setTimeout(typeChar, 400); 
                     }
                 } else {
-                    signature.style.opacity = '1';
+                    // Revelamos ambas firmas
+                    sigAbel.style.opacity = '1';
+                    sigAlejandra.style.opacity = '1';
                     setTimeout(() => {
                         timerBox.style.opacity = '1';
                     }, 1000);
