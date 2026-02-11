@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Árbol de Amor</title>
+    <style>
+        :root {
+            --primary-love: #ff4d6d;
+            --bg-color: #fff5f8;
+            --trunk-color: #795548;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+
+        /* --- Pantalla Inicial --- */
+        .initial-container {
+            text-align: center;
+            z-index: 10;
+            position: absolute;
+        }
+
+        #heart-trigger {
+            font-size: 80px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: float 2s ease-in-out infinite;
+            filter: drop-shadow(0 10px 15px rgba(255, 77, 109, 0.4));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .initial-text {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            color: #d81b60;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* --- Tarjeta Principal --- */
+        #main-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            padding-bottom: 3rem;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(255, 77, 109, 0.15);
+            backdrop-filter: blur(10px);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* --- El Árbol --- */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .tree-svg {
+            width: 300px;
+            height: 100%;
+            overflow: visible;
+            z-index: 1; 
+        }
+
+        .branch {
+            fill: none;
+            stroke: var(--trunk-color);
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+
+        .branch.grow {
+            animation: growBranch 2s ease-out forwards;
+        }
+
+        @keyframes growBranch {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .hearts-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2; 
+        }
+
+        .tree-heart {
+            position: absolute;
+            transform: scale(0);
+            animation: popHeart 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes popHeart {
+            0% { transform: scale(0); opacity: 0;}
+            100% { transform: scale(1); opacity: 1;}
+        }
+
+        /* --- Mensaje y Animación de Texto --- */
+        .message-box {
+            text-align: center;
+            margin-top: -10px;
+            z-index: 3;
+            min-height: 100px;
+        }
+
+        .love-quote {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .letter-anim {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: slideUpLetter 0.5s ease forwards;
+        }
+
+        @keyframes slideUpLetter {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .signature {
+            color: #ff4d6d; 
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            margin-top: 10px;
+        }
+
+        /* CAJA DEL RELOJ */
+        .timer-box {
+            background: #ffe5ec;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 20px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .timer-title {
+            color: #ff4d6d; 
+            font-weight: bold; 
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .timer-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .t-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #d81b60;
+        }
+
+        .t-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #888;
+        }
+        
+        .falling-heart {
+            position: fixed;
+            top: -10vh;
+            pointer-events: none;
+            animation: rain linear forwards;
+        }
+        @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="initial-container">
+        <div id="heart-trigger">💖</div>
+        <div class="initial-text">Para ti...</div>
+    </div>
+
+    <div id="main-card">
+        <div class="tree-container">
+            <svg class="tree-svg" viewBox="0 0 200 300">
+                <path class="branch" stroke-width="12" d="M100,300 C100,250 80,200 100,150" />
+                <path class="branch" stroke-width="8" d="M100,180 C80,160 60,160 40,140" />
+                <path class="branch" stroke-width="8" d="M100,180 C120,160 140,160 160,140" />
+                <path class="branch" stroke-width="4" d="M100,150 C70,120 60,100 50,80" />
+                <path class="branch" stroke-width="4" d="M100,150 C130,120 140,100 150,80" />
+                <path class="branch" stroke-width="3" d="M100,150 C100,120 100,100 100,70" />
+            </svg>
+            <div class="hearts-layer" id="heartsLayer"></div>
+        </div>
+
+        <div class="message-box">
+            <div class="love-quote" id="quoteTarget"></div>
+            <div class="signature" id="signature">— I love you Alejandra❤️</div>
+        </div>
+
+        <div class="timer-box" id="timerBox">
+            <div class="timer-title">— Mi amor por ti comenzó hace... ❤️—> </div>
+            <div class="timer-row">
+                <div class="time-unit"><span class="t-val" id="d">0</span><br><span class="t-label">Días</span></div>
+                <div class="time-unit"><span class="t-val" id="h">0</span><br><span class="t-label">Hs</span></div>
+                <div class="time-unit"><span class="t-val" id="m">0</span><br><span class="t-label">Min</span></div>
+                <div class="time-unit"><span class="t-val" id="s">0</span><br><span class="t-label">Seg</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startDate = new Date('2026-01-01T00:00:00'); 
+        
+        // Ya no necesitas los espacios dobles extra, el código ahora los respeta
+        const messageLines = [
+            "Contigo encontré mi lugar favorito en el mundo.",
+            "Cada segundo a tu lado es un regalo."
+        ];
+
+        const trigger = document.getElementById('heart-trigger');
+        const initContainer = document.querySelector('.initial-container');
+        const mainCard = document.getElementById('main-card');
+        const branches = document.querySelectorAll('.branch');
+        const quoteTarget = document.getElementById('quoteTarget');
+        const signature = document.getElementById('signature');
+        const timerBox = document.getElementById('timerBox');
+
+        trigger.addEventListener('click', () => {
+            initContainer.style.opacity = '0';
+            setTimeout(() => initContainer.style.display = 'none', 500);
+            
+            mainCard.style.display = 'flex';
+            document.body.style.background = '#ffe5ec';
+
+            setTimeout(() => {
+                branches.forEach(b => b.classList.add('grow'));
+            }, 300);
+
+            setTimeout(() => {
+                createBranchCoveringCanopy();
+            }, 1200);
+
+            setTimeout(() => {
+                typeWriterEffect();
+            }, 4000);
+
+            startTimer();
+            setInterval(createFallingHeart, 400);
+        });
+
+        function typeWriterEffect() {
+            let lineIndex = 0;
+            let charIndex = 0;
+            
+            function typeChar() {
+                if (lineIndex < messageLines.length) {
+                    if (charIndex < messageLines[lineIndex].length) {
+                        const char = messageLines[lineIndex].charAt(charIndex);
+                        const span = document.createElement('span');
+                        span.className = 'letter-anim';
+                        
+                        // --- AQUÍ ESTÁ LA SOLUCIÓN ---
+                        // Si la letra es un espacio, insertamos un código especial de espacio (&nbsp;)
+                        if (char === ' ') {
+                            span.innerHTML = '&nbsp;';
+                        } else {
+                            span.textContent = char;
+                        }
+                        
+                        quoteTarget.appendChild(span);
+                        
+                        charIndex++;
+                        setTimeout(typeChar, 40); 
+                    } else {
+                        quoteTarget.appendChild(document.createElement('br'));
+                        lineIndex++;
+                        charIndex = 0;
+                        setTimeout(typeChar, 400); 
+                    }
+                } else {
+                    signature.style.opacity = '1';
+                    setTimeout(() => {
+                        timerBox.style.opacity = '1';
+                    }, 1000);
+                }
+            }
+            typeChar();
+        }
+
+        function createBranchCoveringCanopy() {
+            const heartsLayer = document.getElementById('heartsLayer');
+            const branchPoints = [
+                {x: 100, y: 220, count: 12, spread: 15},
+                {x: 100, y: 160, count: 35, spread: 28},
+                {x: 70, y: 170, count: 35, spread: 25},
+                {x: 130, y: 170, count: 35, spread: 25},
+                {x: 50, y: 130, count: 35, spread: 28},
+                {x: 150, y: 130, count: 35, spread: 28},
+                {x: 60, y: 100, count: 40, spread: 35},
+                {x: 140, y: 100, count: 50, spread: 35},
+                {x: 100, y: 75, count: 65, spread: 45},
+            ];
+
+            branchPoints.forEach(point => {
+                for(let i=0; i<point.count; i++) {
+                    const offsetX = (Math.random() - 0.5) * point.spread * 2;
+                    const offsetY = (Math.random() - 0.5) * point.spread * 2;
+                    const finalX = point.x + offsetX;
+                    const finalY = point.y + offsetY;
+
+                    const heart = document.createElement('div');
+                    heart.className = 'tree-heart';
+                    heart.innerText = ['❤️','💖','💗', '💕', '🌸'][Math.floor(Math.random()*5)];
+                    heart.style.fontSize = (Math.random() * 16 + 10) + 'px';
+                    heart.style.left = `${(finalX / 200) * 100}%`;
+                    heart.style.top = `${(finalY / 300) * 98}%`; 
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heartsLayer.appendChild(heart);
+                }
+            });
+        }
+
+        function startTimer() {
+            function update() {
+                const diff = new Date() - startDate;
+                document.getElementById('d').innerText = Math.floor(diff / 86400000);
+                document.getElementById('h').innerText = Math.floor((diff / 3600000) % 24);
+                document.getElementById('m').innerText = Math.floor((diff / 60000) % 60);
+                document.getElementById('s').innerText = Math.floor((diff / 1000) % 60);
+            }
+            update();
+            setInterval(update, 1000);
+        }
+
+        function createFallingHeart() {
+            const h = document.createElement('div');
+            h.innerText = ['🌸', '❤️'][Math.floor(Math.random()*2)]; 
+            h.className = 'falling-heart';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = Math.random() * 2 + 3 + 's';
+            h.style.fontSize = Math.random() * 10 + 10 + 'px';
+            h.style.opacity = Math.random() * 0.5 + 0.3;
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 5000);
+        }
+    </script>
+</body>
+</html>
