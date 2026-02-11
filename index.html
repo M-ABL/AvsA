@@ -24,60 +24,27 @@
             transition: background 1s ease;
         }
 
-        /* --- Pantalla Inicial --- */
-        .initial-container {
-            text-align: center;
-            z-index: 10;
-            position: absolute;
-        }
-
-        #heart-trigger {
-            font-size: 80px;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: float 2s ease-in-out infinite;
-            filter: drop-shadow(0 10px 15px rgba(255, 77, 109, 0.4));
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .initial-text {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            color: #d81b60;
-            letter-spacing: 1px;
-            font-weight: 500;
-        }
-
         /* --- Tarjeta Principal --- */
         #main-card {
             display: none;
             flex-direction: column;
             align-items: center;
-            width: 90%;
+            width: 95%; /* Un poco más ancho en móviles */
             max-width: 500px;
             background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            padding-bottom: 3rem;
+            padding: 1.5rem;
             border-radius: 40px;
             box-shadow: 0 20px 60px rgba(255, 77, 109, 0.15);
             backdrop-filter: blur(10px);
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            text-align: center;
         }
 
         /* --- El Árbol --- */
         .tree-container {
             position: relative;
             width: 100%;
-            height: 350px;
+            height: 300px; /* Reducido un poco para que quepa todo el texto abajo */
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -85,10 +52,9 @@
         }
 
         .tree-svg {
-            width: 300px;
+            width: 250px;
             height: 100%;
             overflow: visible;
-            z-index: 1; 
         }
 
         .branch {
@@ -98,49 +64,50 @@
             stroke-linejoin: round;
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-            opacity: 0.8;
         }
 
-        .branch.grow {
-            animation: growBranch 2s ease-out forwards;
-        }
-
-        @keyframes growBranch {
-            to { stroke-dashoffset: 0; }
-        }
+        .branch.grow { animation: growBranch 2s ease-out forwards; }
+        @keyframes growBranch { to { stroke-dashoffset: 0; } }
 
         .hearts-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
-            z-index: 2; 
         }
 
         .tree-heart {
             position: absolute;
             transform: scale(0);
             animation: popHeart 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
         }
+        @keyframes popHeart { to { transform: scale(1); opacity: 1; } }
 
-        @keyframes popHeart {
-            0% { transform: scale(0) rotate(-45deg); opacity: 0;}
-            100% { transform: scale(1) rotate(0deg); opacity: 1;}
-        }
-
+        /* --- Mensaje Centrado y Responsivo --- */
         .message-box {
-            text-align: center;
-            margin-top: -10px;
-            z-index: 3;
-            min-height: 80px;
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 110px;
         }
 
         .love-quote {
             font-size: 1.1rem;
             color: #555;
-            line-height: 1.6;
+            line-height: 1.5;
             font-style: italic;
-            margin-bottom: 10px;
+            width: 100%;
+            max-width: 400px; /* Evita que el texto toque los bordes */
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Ajuste para móviles muy pequeños */
+        @media (max-width: 400px) {
+            .love-quote { font-size: 0.95rem; }
+            .t-val { font-size: 1.2rem; }
+            .tree-container { height: 250px; }
         }
 
         .letter-anim {
@@ -157,24 +124,22 @@
         .signature {
             color: #ff4d6d; 
             font-weight: bold;
-            opacity: 0; 
+            opacity: 0;
             transition: opacity 1.5s ease;
-            margin-top: 8px;
+            margin: 5px 0;
+            font-size: 1rem;
         }
 
         /* CAJA DEL RELOJ */
         .timer-box {
             background: #ffe5ec;
-            padding: 20px;
+            padding: 15px;
             border-radius: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            box-sizing: border-box;
-            margin-top: 20px;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-            z-index: 3;
+            margin-top: 15px;
             opacity: 0;
             transition: opacity 1.5s ease;
         }
@@ -182,45 +147,24 @@
         .timer-title {
             color: #ff4d6d; 
             font-weight: bold; 
-            margin-bottom: 15px;
-            font-size: 1rem;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
         }
 
         .timer-row {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             justify-content: center;
-            width: 100%;
         }
 
-        .time-unit {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 50px;
-        }
+        .time-unit { text-align: center; }
+        .t-val { font-size: 1.3rem; font-weight: 800; color: #d81b60; }
+        .t-label { font-size: 0.65rem; text-transform: uppercase; color: #888; }
 
-        .t-val {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #d81b60;
-        }
-
-        .t-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #888;
-        }
-        
-        .falling-heart {
-            position: fixed;
-            top: -10vh;
-            pointer-events: none;
-            z-index: 0;
-            animation: rain linear forwards;
-        }
+        #heart-trigger { font-size: 80px; cursor: pointer; animation: float 2s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .falling-heart { position: fixed; top: -10vh; animation: rain linear forwards; }
         @keyframes rain { to { transform: translateY(110vh) rotate(360deg); } }
-
     </style>
 </head>
 <body>
@@ -231,7 +175,7 @@
     </div>
 
     <div id="main-card">
-        <div class="signature" id="sigAbel">—By Abel ❤️</div>
+        <div class="signature" id="sigAbel" style="margin-bottom: 10px;">—By Abel ❤️</div>
         
         <div class="tree-container">
             <svg class="tree-svg" viewBox="0 0 200 300">
@@ -251,7 +195,7 @@
         </div>
 
         <div class="timer-box" id="timerBox">
-            <div class="timer-title">— Mi amor por ti comenzó hace... ❤️ —</div>
+            <div class="timer-title">Nuestro amor comenzó hace.. ❤️-></div>
             <div class="timer-row">
                 <div class="time-unit"><span class="t-val" id="d">0</span><br><span class="t-label">Días</span></div>
                 <div class="time-unit"><span class="t-val" id="h">0</span><br><span class="t-label">Hs</span></div>
@@ -262,43 +206,27 @@
     </div>
 
     <script>
-        const startDate = new Date('2026-01-01T00:00:00'); 
-        
+        const startDate = new Date('2016-01-01T00:00:00'); 
         const messageLines = [
             "Contigo encontré mi lugar favorito en el mundo.",
             "Cada segundo a tu lado es un regalo."
         ];
 
         const trigger = document.getElementById('heart-trigger');
-        const initContainer = document.querySelector('.initial-container');
         const mainCard = document.getElementById('main-card');
-        const branches = document.querySelectorAll('.branch');
         const quoteTarget = document.getElementById('quoteTarget');
-        const timerBox = document.getElementById('timerBox');
-        
-        // Seleccionamos ambos elementos de firma
         const sigAbel = document.getElementById('sigAbel');
         const sigAlejandra = document.getElementById('sigAlejandra');
+        const timerBox = document.getElementById('timerBox');
 
         trigger.addEventListener('click', () => {
-            initContainer.style.opacity = '0';
-            setTimeout(() => initContainer.style.display = 'none', 500);
-            
+            document.querySelector('.initial-container').style.display = 'none';
             mainCard.style.display = 'flex';
             document.body.style.background = '#ffe5ec';
 
-            setTimeout(() => {
-                branches.forEach(b => b.classList.add('grow'));
-            }, 300);
-
-            setTimeout(() => {
-                createBranchCoveringCanopy();
-            }, 1200);
-
-            setTimeout(() => {
-                typeWriterEffect();
-            }, 4000);
-
+            document.querySelectorAll('.branch').forEach(b => b.classList.add('grow'));
+            setTimeout(createBranchCoveringCanopy, 1200);
+            setTimeout(typeWriterEffect, 4000);
             startTimer();
             setInterval(createFallingHeart, 400);
         });
@@ -313,29 +241,20 @@
                         const char = messageLines[lineIndex].charAt(charIndex);
                         const span = document.createElement('span');
                         span.className = 'letter-anim';
-                        
-                        if (char === ' ') {
-                            span.innerHTML = '&nbsp;';
-                        } else {
-                            span.textContent = char;
-                        }
-                        
+                        span.innerHTML = char === ' ' ? '&nbsp;' : char;
                         quoteTarget.appendChild(span);
                         charIndex++;
-                        setTimeout(typeChar, 45); 
+                        setTimeout(typeChar, 50); 
                     } else {
                         quoteTarget.appendChild(document.createElement('br'));
                         lineIndex++;
                         charIndex = 0;
-                        setTimeout(typeChar, 400); 
+                        setTimeout(typeChar, 500); 
                     }
                 } else {
-                    // Revelamos ambas firmas
                     sigAbel.style.opacity = '1';
                     sigAlejandra.style.opacity = '1';
-                    setTimeout(() => {
-                        timerBox.style.opacity = '1';
-                    }, 1000);
+                    setTimeout(() => timerBox.style.opacity = '1', 1000);
                 }
             }
             typeChar();
@@ -343,57 +262,46 @@
 
         function createBranchCoveringCanopy() {
             const heartsLayer = document.getElementById('heartsLayer');
-            const branchPoints = [
-                {x: 100, y: 220, count: 12, spread: 15},
-                {x: 100, y: 160, count: 35, spread: 28},
-                {x: 70, y: 170, count: 35, spread: 25},
-                {x: 130, y: 170, count: 35, spread: 25},
-                {x: 50, y: 130, count: 35, spread: 28},
-                {x: 150, y: 130, count: 35, spread: 28},
-                {x: 60, y: 100, count: 40, spread: 35},
-                {x: 140, y: 100, count: 50, spread: 35},
-                {x: 100, y: 75, count: 65, spread: 45},
+            const points = [
+                {x: 100, y: 220, c: 10, s: 15}, {x: 100, y: 160, c: 30, s: 25},
+                {x: 70, y: 170, c: 30, s: 20}, {x: 130, y: 170, c: 30, s: 20},
+                {x: 50, y: 130, c: 30, s: 25}, {x: 150, y: 130, c: 30, s: 25},
+                {x: 60, y: 100, c: 40, s: 30}, {x: 140, y: 100, c: 40, s: 30},
+                {x: 100, y: 75, c: 60, s: 40}
             ];
-
-            branchPoints.forEach(point => {
-                for(let i=0; i<point.count; i++) {
-                    const offsetX = (Math.random() - 0.5) * point.spread * 2;
-                    const offsetY = (Math.random() - 0.5) * point.spread * 2;
-                    const finalX = point.x + offsetX;
-                    const finalY = point.y + offsetY;
-
-                    const heart = document.createElement('div');
-                    heart.className = 'tree-heart';
-                    heart.innerText = ['❤️','💖','💗', '💕', '🌸'][Math.floor(Math.random()*5)];
-                    heart.style.fontSize = (Math.random() * 16 + 10) + 'px';
-                    heart.style.left = `${(finalX / 200) * 100}%`;
-                    heart.style.top = `${(finalY / 300) * 98}%`; 
-                    heart.style.animationDelay = Math.random() * 2 + 's';
-                    heartsLayer.appendChild(heart);
+            points.forEach(p => {
+                for(let i=0; i<p.c; i++) {
+                    const h = document.createElement('div');
+                    h.className = 'tree-heart';
+                    h.innerText = ['❤️','💖','💗','💕','🌸'][Math.floor(Math.random()*5)];
+                    h.style.fontSize = (Math.random()*12 + 10)+'px';
+                    h.style.left = `${((p.x + (Math.random()-0.5)*p.s*2)/200)*100}%`;
+                    h.style.top = `${((p.y + (Math.random()-0.5)*p.s*2)/300)*98}%`;
+                    h.style.animationDelay = Math.random()*2+'s';
+                    heartsLayer.appendChild(h);
                 }
             });
         }
 
         function startTimer() {
-            function update() {
+            const update = () => {
                 const diff = new Date() - startDate;
                 document.getElementById('d').innerText = Math.floor(diff / 86400000);
                 document.getElementById('h').innerText = Math.floor((diff / 3600000) % 24);
                 document.getElementById('m').innerText = Math.floor((diff / 60000) % 60);
                 document.getElementById('s').innerText = Math.floor((diff / 1000) % 60);
-            }
-            update();
-            setInterval(update, 1000);
+            };
+            update(); setInterval(update, 1000);
         }
 
         function createFallingHeart() {
             const h = document.createElement('div');
             h.innerText = ['🌸', '❤️'][Math.floor(Math.random()*2)]; 
             h.className = 'falling-heart';
-            h.style.left = Math.random() * 100 + 'vw';
-            h.style.animationDuration = Math.random() * 2 + 3 + 's';
-            h.style.fontSize = Math.random() * 10 + 10 + 'px';
-            h.style.opacity = Math.random() * 0.5 + 0.3;
+            h.style.left = Math.random()*100+'vw';
+            h.style.animationDuration = Math.random()*2+3+'s';
+            h.style.fontSize = Math.random()*10+10+'px';
+            h.style.opacity = Math.random()*0.5+0.3;
             document.body.appendChild(h);
             setTimeout(() => h.remove(), 5000);
         }
